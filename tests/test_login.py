@@ -1,15 +1,21 @@
+import os
 import allure
 from selene import browser, have
+from config import load_env
 
 
 def test_login():
+    load_env()
+    email = os.getenv('EMAIL')
+    password = os.getenv('PASSWORD')
+
     with allure.step('Open login page'):
         browser.open('/login')
 
     with allure.step('Fill login data'):
-        browser.element('#Email').type('j.doe@example.mail.com')
-        browser.element('#Password').type('123456')
+        browser.element('#Email').type(email)
+        browser.element('#Password').type(password)
         browser.element('.login-button').click()
 
     with allure.step('Account data should be displayed'):
-        browser.element('.account').should(have.text('j.doe@example.mail.com'))
+        browser.element('.account').should(have.exact_text('j.doe@example.mail.com'))
