@@ -13,6 +13,7 @@ allure-pytest = "^2.13.5"
 pydantic-settings = "^2.2.1"
 python-dotenv = "^1.0.1"
 pathlib = "^1.0.1"
+requests = "^2.31.0"
 
 
 [tool.poetry.group.dev.dependencies]

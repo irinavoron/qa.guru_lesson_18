@@ -2,13 +2,15 @@ import os
 import allure
 from selene import browser, have
 from config import load_env
+import requests
 
 
-def test_login():
-    load_env()
-    email = os.getenv('EMAIL')
-    password = os.getenv('PASSWORD')
+load_env()
+email = os.getenv('EMAIL')
+password = os.getenv('PASSWORD')
 
+
+def test_login_ui():
     with allure.step('Open login page'):
         browser.open('/login')
 
@@ -18,4 +20,15 @@ def test_login():
         browser.element('.login-button').click()
 
     with allure.step('Account data should be displayed'):
-        browser.element('.account').should(have.exact_text('j.doe@example.mail.com'))
+        browser.element('.account').should(have.exact_text(email))
+
+
+def test_login_api():
+    response = requests.post(
+        url='https://demowebshop.tricentis.com/login',
+        data={'Email': email, 'Password': password},
+        allow_redirects=False
+    )
+
+    print(response.status_code)
+
