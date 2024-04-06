@@ -7,7 +7,6 @@ from selene import browser, have
 from config import load_env
 import requests
 
-
 load_env()
 email = os.getenv('EMAIL')
 password = os.getenv('PASSWORD')
@@ -34,7 +33,9 @@ def test_login_api():
             allow_redirects=False
         )
         allure.attach(response.text, 'response', AttachmentType.TEXT, '.txt')
+
         auth_coockie = response.cookies.get('NOPCOMMERCE.AUTH')
+
         allure.attach(auth_coockie, 'Authorization coockie', AttachmentType.TEXT, '.txt')
         logging.info(response.text)
         logging.info(response.status_code)
@@ -47,5 +48,3 @@ def test_login_api():
 
     with allure.step('Verify successful authorization'):
         browser.element('.account').should(have.exact_text(email))
-
-
