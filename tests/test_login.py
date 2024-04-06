@@ -1,5 +1,7 @@
+import logging
 import os
 import allure
+
 from allure_commons.types import AttachmentType
 from selene import browser, have
 from config import load_env
@@ -34,6 +36,9 @@ def test_login_api():
         allure.attach(response.text, 'response', AttachmentType.TEXT, '.txt')
         auth_coockie = response.cookies.get('NOPCOMMERCE.AUTH')
         allure.attach(auth_coockie, 'Authorization coockie', AttachmentType.TEXT, '.txt')
+        logging.info(response.text)
+        logging.info(response.status_code)
+        logging.info(response.request.url)
 
     with allure.step('Login with api'):
         browser.open('/')
