@@ -1,15 +1,12 @@
-import pytest
 from selene import browser
-from config import config
+import pytest
 
 
-@pytest.fixture(autouse=True, scope='function')
+@pytest.fixture(autouse=True)
 def browser_management():
-    browser.config.base_url = config.BASE_URL
-    browser.config.window_width = config.WINDOW_WIDTH
-    browser.config.window_height = config.WINDOW_HEIGHT
-    browser.config.timeout = config.TIMEOUT
-    browser.config.driver_name = config.driver_name
+    browser.config.base_url = 'https://demowebshop.tricentis.com'
+    browser.config.window_width = 1896
+    browser.config.window_height = 1080
 
     yield
 
