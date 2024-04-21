@@ -3,7 +3,7 @@ import os
 from allure_commons.types import AttachmentType
 import requests
 import allure
-from selene import browser, have, be
+from selene import browser, have, be, command
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -42,19 +42,6 @@ def login_with_authorization_cookie():
         browser.driver.refresh()
 
 
-# def add_product_to_cart(product_endpoint, **kwargs):
-#     authorization_cookie = get_authorization_cookie()
-#
-#     with allure.step('Login with authorization cookie'):
-#         browser.open('/')
-#         browser.driver.add_cookie({'name': 'NOPCOMMERCE.AUTH', 'value': authorization_cookie})
-#         browser.driver.refresh()
-#
-#     with allure.step('Add product to cart'):
-#         response = requests.post(base_url + product_endpoint, **kwargs)
-#
-#         return response
-
 def add_product_to_cart(product_endpoint, **kwargs):
     with allure.step('Add product to cart'):
         response = requests.post(base_url + product_endpoint, **kwargs)
@@ -65,6 +52,13 @@ def add_product_to_cart(product_endpoint, **kwargs):
 def open_cart_with_ui():
     with allure.step('Open cart with ui'):
         browser.element('.header-links #topcartlink').click()
+
+
+def clear_cart_with_ui():
+    with allure.step('Clear cart with UI'):
+        browser.element('.qty-input').clear()
+        browser.element('.qty-input').type('0')
+        browser.element('[name=updatecart]').click()
 
 
 def test_product_added_to_cart():
@@ -84,6 +78,8 @@ def test_product_added_to_cart():
             have.attribute('value', '1')
         )
         browser.all('.cart-item-row').should(have.size(1))
+
+    clear_cart_with_ui()
 
 
 def test_added_product_can_be_deleted():
@@ -105,7 +101,7 @@ def test_added_product_can_be_deleted():
         browser.element('.order-summary-content').should(have.text('Your Shopping Cart is empty!'))
 
 
-def test_amount_can_be_changed_in_the_cart():
+def test_qty_can_be_updated_in_the_cart():
     authorization_cookie = get_authorization_cookie()
     login_with_authorization_cookie()
 
@@ -116,25 +112,15 @@ def test_amount_can_be_changed_in_the_cart():
 
     open_cart_with_ui()
 
-    with allure.step('Increase amount in the cart by 1'):
+    with allure.step('Update the qty in the cart'):
+        qty = 1
+        # total = browser.element('.product-subtotal')
+
+        browser.element('.qty-input').clear()
+        browser.element('.qty-input').type(qty + 1)
+        browser.element('[name=updatecart]').click()
+
+    with allure.step('Updated qty should be displayed in the cart'):
         pass
 
-# def test_login_ui():
-#     browser.open('/login')
-#     browser.element('#Email').type('j.doe@example.mail.com')
-#     browser.element('#Password').type('123456')
-#     browser.element('.login-button').click()
-#
-#     browser.element('.account').should(have.exact_text('j.doe@example.mail.com'))
-
-
-# def test_login_api():
-#     authorization_cookie = get_authorization_cookie()
-#
-#     with allure.step('Login with authorization cookie'):
-#         browser.open('/')
-#         browser.driver.add_cookie({'name': 'NOPCOMMERCE.AUTH', 'value': authorization_cookie})
-#         browser.driver.refresh()
-#
-#     with allure.step('Verify successful authorization'):
-#         browser.element('.account').should(have.exact_text(email))
+    clear_cart_with_ui()
