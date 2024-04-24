@@ -21,7 +21,7 @@ def clear_cart(items_qty):
             browser.element('[name=updatecart]').click()
 
 
-def remove_product_from_the_cart():
+def remove_product_from_cart():
     with allure.step('Remove added product from the cart'):
         browser.element('[name=removefromcart]').click()
         browser.element('[name=updatecart]').click()

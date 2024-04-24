@@ -1,10 +1,11 @@
-import logging
 import os
 import allure
 import requests
 from allure_commons.types import AttachmentType
 from selene import browser
 from dotenv import load_dotenv
+
+from demowebshop_test.utils.logging_attaching_methods import response_logging, response_attaching
 
 load_dotenv()
 EMAIL = os.getenv('EMAIL')
@@ -20,13 +21,12 @@ def get_authorization_cookie():
             allow_redirects=False
         )
 
-        allure.attach(response.text, 'response', AttachmentType.TEXT, '.txt')
-
         cookie = response.cookies.get('NOPCOMMERCE.AUTH')
 
         allure.attach(str(cookie), 'authorization_cookie', AttachmentType.TEXT, '.txt')
 
-        logging.info(cookie)
+        response_logging(response)
+        response_attaching(response)
 
         return cookie
 
@@ -41,5 +41,8 @@ def login(authorization_cookie):
 def add_product_to_cart(product_endpoint, **kwargs):
     with allure.step('Add product to cart with auth.cookie'):
         response = requests.post(BASE_URL + product_endpoint, **kwargs)
+
+        response_logging(response)
+        response_attaching(response)
 
         return response
