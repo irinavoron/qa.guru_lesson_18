@@ -33,7 +33,8 @@ def get_authorization_cookie():
 
 def login(authorization_cookie):
     with allure.step('Login with authorization cookie'):
-        browser.open('https://demowebshop.tricentis.com')
+        #browser.open('https://demowebshop.tricentis.com')
+        browser.open('/')
         browser.driver.add_cookie({'name': 'NOPCOMMERCE.AUTH', 'value': authorization_cookie})
         browser.driver.refresh()
 
