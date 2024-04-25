@@ -13,3 +13,9 @@ notebook = Product(
     price=1590.00,
     add_to_cart_endpoint='/addproducttocart/details/31/1'
 )
+
+smartphone = Product(
+    name='Smartphone',
+    price=100.00,
+    add_to_cart_endpoint='/addproducttocart/catalog/43/1/1'
+)
