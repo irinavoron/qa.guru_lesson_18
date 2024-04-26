@@ -40,24 +40,6 @@ def get_authorization_cookie():
         return cookie
 
 
-# def get_authorization_cookie():
-#     with allure.step('Get authorization cookie from response'):
-#         response = requests.post(
-#             url=BASE_URL + '/login',
-#             data={'Email': EMAIL, 'Password': PASSWORD},
-#             allow_redirects=False
-#         )
-#
-#         cookie = response.cookies.get('NOPCOMMERCE.AUTH')
-#
-#         allure.attach(str(cookie), 'authorization_cookie', AttachmentType.TEXT, '.txt')
-#
-#         response_logging(response)
-#         response_attaching(response)
-#
-#         return cookie
-
-
 def login(authorization_cookie):
     with allure.step('Login with authorization cookie'):
         browser.open(BASE_URL)
@@ -73,18 +55,5 @@ def add_product_to_cart(product_endpoint, **kwargs):
             method='POST',
             **kwargs
         )
-        # response = requests.post(BASE_URL + product_endpoint, **kwargs)
-
-        # response_logging(response)
-        # response_attaching(response)
 
         return response
-
-# def add_product_to_cart(product_endpoint, **kwargs):
-#     with allure.step('Add product to cart with auth.cookie'):
-#         response = requests.post(BASE_URL + product_endpoint, **kwargs)
-#
-#         response_logging(response)
-#         response_attaching(response)
-#
-#         return response

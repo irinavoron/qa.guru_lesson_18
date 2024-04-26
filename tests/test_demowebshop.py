@@ -8,9 +8,8 @@ from demowebshop_test.utils import api_methods, ui_methods
 cookie_name = 'NOPCOMMERCE.AUTH'
 
 
-def test_product_can_be_added_to_cart():
+def test_product_can_be_added_to_cart(authorization_cookie):
     items_qty = 1
-    authorization_cookie = api_methods.get_authorization_cookie()
     api_methods.login(authorization_cookie)
 
     api_methods.add_product_to_cart(product_endpoint=products.notebook.add_to_cart_endpoint,
@@ -25,8 +24,7 @@ def test_product_can_be_added_to_cart():
     ui_methods.clear_cart(items_qty)
 
 
-def test_added_product_can_be_deleted():
-    authorization_cookie = api_methods.get_authorization_cookie()
+def test_added_product_can_be_deleted(authorization_cookie):
     api_methods.login(authorization_cookie)
 
     api_methods.add_product_to_cart(product_endpoint=smartphone.add_to_cart_endpoint,

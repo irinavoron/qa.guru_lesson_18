@@ -6,6 +6,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from dotenv import load_dotenv
 
+from demowebshop_test.utils.api_methods import get_authorization_cookie
+
 
 @pytest.fixture(autouse=True)
 def browser_management():
@@ -40,3 +42,8 @@ def browser_management():
     yield
 
     browser.quit()
+
+
+@pytest.fixture()
+def authorization_cookie():
+    return get_authorization_cookie()
