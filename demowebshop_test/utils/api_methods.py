@@ -13,10 +13,22 @@ PASSWORD = os.getenv('PASSWORD')
 BASE_URL = os.getenv('BASE_URL')
 
 
+def api_request(base_api_url, endpoint, method, data=None, params=None, **args):
+    url = f'{base_api_url}{endpoint}'
+    response = requests.request(method, url, data=data, params=params, **args)
+
+    response_logging(response)
+    response_attaching(response)
+
+    return response
+
+
 def get_authorization_cookie():
     with allure.step('Get authorization cookie from response'):
-        response = requests.post(
-            url=BASE_URL + '/login',
+        response = api_request(
+            base_api_url=BASE_URL,
+            endpoint='/login',
+            method='POST',
             data={'Email': EMAIL, 'Password': PASSWORD},
             allow_redirects=False
         )
@@ -25,25 +37,54 @@ def get_authorization_cookie():
 
         allure.attach(str(cookie), 'authorization_cookie', AttachmentType.TEXT, '.txt')
 
-        response_logging(response)
-        response_attaching(response)
-
         return cookie
+
+
+# def get_authorization_cookie():
+#     with allure.step('Get authorization cookie from response'):
+#         response = requests.post(
+#             url=BASE_URL + '/login',
+#             data={'Email': EMAIL, 'Password': PASSWORD},
+#             allow_redirects=False
+#         )
+#
+#         cookie = response.cookies.get('NOPCOMMERCE.AUTH')
+#
+#         allure.attach(str(cookie), 'authorization_cookie', AttachmentType.TEXT, '.txt')
+#
+#         response_logging(response)
+#         response_attaching(response)
+#
+#         return cookie
 
 
 def login(authorization_cookie):
     with allure.step('Login with authorization cookie'):
-        #browser.open('https://demowebshop.tricentis.com')
-        browser.open('/')
+        browser.open(BASE_URL)
         browser.driver.add_cookie({'name': 'NOPCOMMERCE.AUTH', 'value': authorization_cookie})
         browser.driver.refresh()
 
 
 def add_product_to_cart(product_endpoint, **kwargs):
     with allure.step('Add product to cart with auth.cookie'):
-        response = requests.post(BASE_URL + product_endpoint, **kwargs)
+        response = api_request(
+            base_api_url=BASE_URL,
+            endpoint=product_endpoint,
+            method='POST',
+            **kwargs
+        )
+        # response = requests.post(BASE_URL + product_endpoint, **kwargs)
 
-        response_logging(response)
-        response_attaching(response)
+        # response_logging(response)
+        # response_attaching(response)
 
         return response
+
+# def add_product_to_cart(product_endpoint, **kwargs):
+#     with allure.step('Add product to cart with auth.cookie'):
+#         response = requests.post(BASE_URL + product_endpoint, **kwargs)
+#
+#         response_logging(response)
+#         response_attaching(response)
+#
+#         return response
