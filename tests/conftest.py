@@ -25,6 +25,7 @@ def browser_management():
     login = os.getenv('SELENOID_LOGIN')
     password = os.getenv('SELENOID_PASSWORD')
     url = os.getenv('SELENOID_URL')
+    base_url = os.getenv('BASE_URL')
 
     driver = webdriver.Remote(
         command_executor=f'https://{login}:{password}@{url}/wd/hub',
@@ -32,7 +33,7 @@ def browser_management():
 
     browser.config.driver = driver
 
-    browser.config.base_url = 'https://demowebshop.tricentis.com'
+    browser.config.base_url = base_url
     browser.config.window_width = 1896
     browser.config.window_height = 1096
 
